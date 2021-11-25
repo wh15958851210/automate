@@ -1,0 +1,23 @@
+server:
+  port: 9002
+
+spring:
+  application:
+    name: automate-interface-service
+  #配置数据源
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://10.10.22.108:1433;databaseName=BDDMS
+    username: sa
+    password: P@ssw0rd
+
+logging:
+  level:
+    com.shenzhou.service: debug
+  file:
+    name: D/log/springBootLog.log
+mybatis:
+  type-aliases-package: com.shenzhou.entity
+  mapper-locations: classpath:mapper/*.xml
+

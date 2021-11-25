@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.shenzhou.dao.AutomateInterfaceMapper">
+
+    <!--tag 0 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
+    <!--新增接口根据basketid-->
+    <select id="getBasketInfo" parameterType="string" resultType="map">
+        Exec AutoBoxGetBasketInfo @BasketID=#{basketId}
+    </select>
+    <!--取得成衣订单数据-->
+    <select id="getBasketClothData" parameterType="string" resultType="map">
+        Exec AutoBoxGetBasketClothData @BasketID=#{basketId}
+    </select>
+    <!--取得成衣喷印数据-->
+    <select id="getBasketMarkRule" parameterType="string" resultType="map">
+        Exec AutoBoxGetBasketMarkRule @BasketID=#{basketId}
+    </select>
+    <!--取得成衣贴标数据-->
+    <select id="getBasketLabelRule" parameterType="string" resultType="map">
+        Exec AutoBoxGetBasketLabelRule @BasketID=#{basketId}
+    </select>
+    <!--继新增接口根据basketid后，修改状态 info及pack 后缀2张表状态-->
+    <select id="updateInfoPack" parameterType="string" resultType="int">
+        Exec AutoBoxUpdate @BasketID=#{basketId}
+    </select>
+
+
+
+
+    <!--tag 1 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
+    <!--  设备监控  -->
+    <select id="insertMachineState" parameterType="map" resultType="int">
+        exec AutoBoxMachineState_trans @machineNo=#{machineNo},@status=#{status},@method=#{method},@stopReason=#{stopReason},
+        @userNo=#{userNo},@updateTime=#{updateTime}
+    </select>
+
+
+
+
+    <!--tag 2 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
+    <!--中转箱状态修改-->
+    <select id="insertBoxBasketState" parameterType="com.shenzhou.entities.AutoBoxBasketState" resultType="int">
+        exec AutoBoxBasketState_trans @basketId=#{basketId},@seqNo=#{seqNo},@userNo=#{userNo},@updateTime=#{updateTime}
+    </select>
+
+
+
+
+    <!--tag 3 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
+    <!--异常过程-->
+    <select id="insertErrorLog" parameterType="com.shenzhou.entities.AutoBoxCheckFail" resultType="int">
+        exec AutoBoxCheckFail_trans @checkFailId=#{checkFailId},@failType=#{failType},@countError=#{countError},@basketId=#{basketId},
+        @seqNo=#{seqNo},@cartonCode=#{cartonCode},@currCartonNo=#{currCartonNo},@userNo=#{userNo},@updateTime=#{updateTime}
+    </select>
+    <!--衣物数量异常-->
+    <select id="insertCloth" parameterType="com.shenzhou.entities.AutoBoxClothCheckFail" resultType="int">
+        exec AutoBoxClothCheckFail_trans @autoBoxFailId=#{autoBoxFailId},@tagCode=#{tagCode},@colorNo=#{colorNo}
+        ,@size=#{size},@count=#{count},@saveTime=#{saveTime}
+    </select>
+    <insert id="insertCheckFail" parameterType="com.shenzhou.entities.AutoBoxCheckFail" useGeneratedKeys="true">
+        insert into AutoBoxCheckFail(CheckFailID,FailType)values(#{checkFailId},#{failType})
+    </insert>
+    <!--衣物数量异常-->
+    <select id="findClothById" resultType="int" parameterType="string">
+        select count(*)  from AutoBoxClothCheckFail where AutoBoxFailID = #{id}
+    </select>
+
+
+
+    <!--tag 4 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
+    <!--包装箱出位接口-->
+    <select id="insertPackOut" parameterType="com.shenzhou.entities.AutoBoxPackOut" resultType="int">
+        exec AutoBoxPackOut_trans @packOutId=#{packOutId},@basketId=#{basketId},@seqNo=#{seqNo},@ngSign=#{ngSign},
+        @cartonCode=#{cartonCode},@currCartonNo=#{currCartonNo},@userNo=#{userNo},@updateTime=#{updateTime}
+    </select>
+    <!--包装出位从表查询数据-->
+    <select id="insertPackOutDe" parameterType="com.shenzhou.entities.AutoBoxPackOutDe" resultType="int">
+        exec AutoBoxPackOutDe_trans @packOutId=#{packOutId},@colorNo=#{colorNo},@size=#{size},@count=#{count},
+        @tagCode=#{tagCode},@saveTime=#{saveTime}
+    </select>
+    <!--包装箱出位接口查数量-->
+    <select id="findNumById" resultType="int" parameterType="string">
+        select count(*)  from AutoBoxPackOutDe where PackOutID = #{id}
+    </select>
+
+
+
+
+    <!--tag 5 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
+    <!--封箱完成接口-->
+    <select id="insertPackOver" parameterType="com.shenzhou.entities.AutoBoxPackOver" resultType="int">
+        exec AutoBoxPackOver_trans @packOverId=#{packOverId},@basketId=#{basketId},@seqNo=#{seqNo},@cartonCode=#{cartonCode},@currCartonNo=#{currCartonNo},
+        @packBeginTime=#{packBeginTime},@packEndTime=#{packEndTime},@ngSign=#{ngSign},@firstSealBeginTime=#{firstSealBeginTime},
+        @firstSealEndTime=#{firstSealEndTime},@secondSealBeginTime=#{secondSealBeginTime},@secondSealEndTime=#{secondSealEndTime},
+        @markBeginTime=#{markBeginTime},@markEndTime=#{markEndTime},@lableTime=#{lableTime},@stampTime=#{stampTime},@userNo=#{userNo},
+        @updateTime=#{updateTime},@IpAddress=#{IpAddress},@input_id=#{input_id},@uccCode=#{uccCode}
+    </select>
+    <!--封箱完成从表查询-->
+    <select id="insertPackOverDe" parameterType="com.shenzhou.entities.AutoBoxPackOverDe" resultType="int">
+        exec AutoBoxPackOverDe_trans @packOverId=#{packOverId},@colorNo=#{colorNo},@size=#{size},@count=#{count},@tagCode=#{tagCode},@saveTime=#{saveTime}
+    </select>
+    <!--封箱完成接口查数量-->
+    <select id="findPackOverNumById" resultType="int" parameterType="string">
+        select count(*)  from AutoBoxPackOverDe where PackOverID = #{id}
+    </select>
+
+    <!--tag 6 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
+    <!--包装箱接收反馈-->
+    <select id="getReceiveCarton" resultType="int" parameterType="string">
+        exec AutoBox_GetReceiveCarton @uccCode=#{uccCode}
+    </select>
+
+
+    <!--tag eg: @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@-->
+    <resultMap id="AutoBoxBasketStateResultMap" type="com.shenzhou.entities.AutoBoxBasketState">
+        <id column="BasketStateID" property="basketStateID" javaType="String"></id>
+        <id column="BasketID" property="basketID" javaType="String" jdbcType="VARCHAR"></id>
+        <id column="SeqNo" property="seqNo" javaType="String" jdbcType="VARCHAR"></id>
+        <id column="Status" property="status" javaType="int" jdbcType="INTEGER"></id>
+        <id column="UserNo" property="UserNo" javaType="String" jdbcType="VARCHAR"></id>
+        <id column="UpdateTime" property="UpdateTime" javaType="String" ></id>
+        <id column="machineNo" property="machineNo" javaType="String" jdbcType="VARCHAR"></id>
+        <id column="channelNo" property="channelNo" javaType="String" jdbcType="VARCHAR"></id>
+    </resultMap>
+    <select id="findAutoBoxBasketPackByBasketId" parameterType="string" resultMap="AutoBoxBasketStateResultMap">
+        select * from AutoBoxBasketPack where BasketId=#{basketId}
+    </select>
+</mapper>
