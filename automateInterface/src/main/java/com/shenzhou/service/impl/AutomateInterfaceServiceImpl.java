@@ -80,7 +80,8 @@ public class AutomateInterfaceServiceImpl implements AutomateInterfaceService {
             map.put("shipTo", HanlderUtil.changeType(info.get("shipTo")));
             map.put("sizeBeginCarton",info.get("sizeBeginCarton"));
             map.put("sizeEndCarton",info.get("sizeEndCarton"));
-
+            map.put("endBoxSign",info.get("endBoxSign"));
+            map.put("custOrderNo",info.get("custOrderNo"));//用来区隔德国的尾箱
             return new ResultEntity(200,"查询成功!",map);
         }catch (Exception e){
             if(e.getMessage() ==null){
