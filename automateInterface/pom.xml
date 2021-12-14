@@ -89,6 +89,45 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--使用docker-maven-plugin插件-->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <executions>
+                    <execution>
+                        <id>build-image</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!--生成的镜像名称-->
+                    <imageName>automate-interface</imageName>
+                    <!--指定镜像版本-->
+                    <imageTags>latest</imageTags>
+                    <!--镜像制作人-->
+                    <maintainer>wh22wanhan@126.com</maintainer>
+
+                    <dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>
+                    <!--指定镜像的远程push地址-->
+<!--                    <dockerHost>http://10.10.76.5:40301</dockerHost>-->
+                    <dockerHost>http://10.10.76.5:41301</dockerHost>
+<!--                    <dockerHost>http://10.10.76.5:42301</dockerHost>-->
+                    <!--这里复制jar包到docker容器指定目录配置-->
+                    <resources>
+                        <resource>
+                            <targetPath>/</targetPath>
+                            <!--配置路径-->
+                            <directory>${project.build.directory}</directory>
+                            <!--用于指定需要复制到docker镜像中的jar包名字-->
+                            <include>${project.build.finalName}.jar</include>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
