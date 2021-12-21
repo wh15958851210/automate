@@ -16,7 +16,7 @@ logging:
   level:
     com.shenzhou.service: debug
   file:
-    name: D/log/springBootLog.log
+    name: log/springBootLog.log
 mybatis:
   type-aliases-package: com.shenzhou.entity
   mapper-locations: classpath:mapper/*.xml
