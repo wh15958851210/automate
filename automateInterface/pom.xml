@@ -103,10 +103,11 @@
                         <id>build-image</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>build</goal>
+                            <!--<goal>build</goal>-->
                         </goals>
                     </execution>
                 </executions>
+
                 <configuration>
                     <!--生成的镜像名称-->
                     <imageName>automate-interface</imageName>
